@@ -1,0 +1,56 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 7023c98b5479528f078f51f4aac96086772f15429293a417cff86955ddda913b
+
+name:           hs-libp2p
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/hs-libp2p#readme>
+homepage:       https://github.com/githubuser/hs-libp2p#readme
+bug-reports:    https://github.com/githubuser/hs-libp2p/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/hs-libp2p
+
+library
+  exposed-modules:
+      Libp2p.Core.Crypto
+      Libp2p.Core.Crypto.RSA
+  other-modules:
+      Paths_hs_libp2p
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , binary
+    , bytes
+    , bytestring
+    , containers
+    , cryptonite
+    , hs-multihash
+  default-language: Haskell2010
+
+test-suite hs-libp2p-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_hs_libp2p
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , hs-libp2p
+    , hs-multihash
+  default-language: Haskell2010

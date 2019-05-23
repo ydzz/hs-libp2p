@@ -1,0 +1,49 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b2c8dc6d86f26265f24f9a7884d02e176a221c8f1737f1e185f4f82d8e6ce03b
+
+name:           hs-multihash
+version:        0.0.0
+build-type:     Simple
+cabal-version:  >= 1.10
+
+library
+  exposed-modules:
+      Libp2p.Multihash
+  other-modules:
+      Paths_hs_multihash
+  hs-source-dirs:
+      src
+  build-depends:
+      base
+    , base58-bytestring
+    , bytes
+    , bytestring
+    , cereal
+    , cryptonite
+    , hexstring
+    , text
+  default-language: Haskell2010
+
+test-suite hs-libp2p-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_hs_multihash
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base
+    , base58-bytestring
+    , bytes
+    , bytestring
+    , cereal
+    , cryptonite
+    , hexstring
+    , hs-multihash
+    , hspec
+    , text
+  default-language: Haskell2010

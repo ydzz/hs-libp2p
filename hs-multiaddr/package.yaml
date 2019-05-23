@@ -1,0 +1,25 @@
+name: hs-multiaddr
+
+dependencies:
+ - base
+ - cereal
+ - network
+ - iproute
+ - bytestring
+ - hs-multihash
+ - bytes
+
+library:
+ source-dirs: src
+
+tests:
+  hs-libp2p-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+     - hs-multiaddr
+     - hspec

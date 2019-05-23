@@ -1,0 +1,26 @@
+name: hs-multihash
+
+dependencies:
+ - base
+ - cereal
+ - bytestring
+ - bytes
+ - text
+ - base58-bytestring
+ - hexstring
+ - cryptonite
+
+library:
+ source-dirs: src
+
+tests:
+  hs-libp2p-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+     - hs-multihash
+     - hspec
