@@ -1,26 +1,20 @@
 name:                hs-libp2p
 version:             0.1.0.0
-github:              "githubuser/hs-libp2p"
-license:             BSD3
+github:              "ydzz/hs-libp2p"
+license:             MIT
 author:              "Author name here"
 maintainer:          "example@example.com"
 copyright:           "2018 Author name here"
 
+
 extra-source-files:
 - README.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
-
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/hs-libp2p#readme>
+description: Please see the README on GitHub at <https://github.com/ydzz/hs-libp2p#readme>
 
 dependencies:
 - base >= 4.7 && < 5
-- hs-multihash
+#- hs-multihash
 
 
 library:
@@ -30,7 +24,12 @@ library:
    - bytes
    - binary
    - containers
+   - x509
+   - pem
    - cryptonite
+   - cryptostore
+   - protocol-buffers
+   - protocol-buffers-descriptor
 
 tests:
   hs-libp2p-test:
@@ -41,4 +40,8 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - bytestring
     - hs-libp2p
+
+
+

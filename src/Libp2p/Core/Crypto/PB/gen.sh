@@ -1,0 +1,1 @@
+hprotoc --proto_path=. --haskell_out=../../../../ crypto.proto
