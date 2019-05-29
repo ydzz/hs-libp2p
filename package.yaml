@@ -23,6 +23,7 @@ library:
    - bytestring
    - bytes
    - binary
+   - cereal
    - containers
    - x509
    - pem
@@ -30,6 +31,9 @@ library:
    - cryptostore
    - protocol-buffers
    - protocol-buffers-descriptor
+   - base58-bytestring
+   - hs-multihash
+   - hexstring
 
 tests:
   hs-libp2p-test:
@@ -42,6 +46,7 @@ tests:
     dependencies:
     - bytestring
     - hs-libp2p
+    - hs-multihash
 
 
 

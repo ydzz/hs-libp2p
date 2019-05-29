@@ -4,8 +4,9 @@ extra-deps:
  - base58-bytestring-0.1.0
  - cryptostore-0.2.0.0
  - x509-1.7.5
+ - hs-multihash
 
 packages:
  - .
-#- hs-multihash
+# - hs-multihash
 #- hs-multiaddr

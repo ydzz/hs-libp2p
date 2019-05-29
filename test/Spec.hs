@@ -1,21 +1,45 @@
+{-# Language OverloadedStrings #-}
+{-# Language ScopedTypeVariables#-}
 import Libp2p.Core.Crypto.RSA
-import Libp2p.Core.Crypto.Key
+import qualified Libp2p.Core.Crypto.Key as K
 import Numeric (showHex)
 import qualified Data.ByteString as B
 import qualified System.IO as I
+import Data.Either
+import Libp2p.Core.Peer.Internal
+import Text.Read
+import qualified Libp2p.Multihash as MH
 main :: IO ()
 main = do
  putStrLn "\r\n========================"
- (pub,prv) <- generateRSAKeyPair 64
- print $ bytes pub
- print $ raw pub
- print $ typ pub
+ testPeer
 
- print $ bytes prv
+testCrypto::IO ()
+testCrypto = do
+ (pub,prv) <- generateRSAKeyPair 64
+ print $ K.bytes pub
+ print $ K.raw pub
+ print $ K.typ pub
+ print $ K.bytes prv
+ putStrLn "==================="
+ let signData::B.ByteString = "12345691011121314151617181920"
+ let   signRet = K.sign prv signData
+ print signRet
+ let signToken::B.ByteString = fromRight "" signRet 
+ print $ K.verify pub signData signToken
  --B.writeFile "fff.txt" $  raw pub
  --B.writeFile "ppp.txt" privareBS
 
 
+testPeer::IO ()
+testPeer = do
+  let pid = ID "000000000000000000000000000000000000000000"
+  print $ pretty　pid
+  print pid
+  let pid2::Either String ID = fromBS58String "QmX9c6GNBsoFBwQLSBNKhygi32iLzg4oWHXwxGDRBDo6qn"
+  print pid2
+  let hexString =  toHexString (fromRight undefined pid2)
+  print $ fromHexString hexString
 
 {-
 

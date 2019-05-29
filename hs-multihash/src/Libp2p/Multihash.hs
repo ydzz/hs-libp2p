@@ -8,7 +8,8 @@ module Libp2p.Multihash (
  toByteString,
  toBS58String,
  toHexString,
- fromHexString
+ fromHexString,
+ fromByteString
 ) where
 import Data.Maybe
 import Text.Read
@@ -24,6 +25,7 @@ import Data.Text
 import Data.ByteString.Base58 as BS58
 import Data.Serialize as DS
 import Data.HexString as Hex
+import qualified Crypto.Hash as CH
 
 data MultihashType = ID | SHA1  | SHA2_256 | SHA2_512 | SHA3_224 | SHA3_256 | SHA3_384 | SHA3_512 | SHA3 | KECCAK_224 | KECCAK_256 |
                      KECCAK_384 | KECCAK_512 | SHAKE_128 | SHAKE_256 | BLAKE2B_MIN | BLAKE2B_MAX | BLAKE2S_MIN | BLAKE2S_MAX | MD5 | DBL_SHA2_256 | MURMUR3 | X11
@@ -155,3 +157,8 @@ toHexString hash = Hex.fromBytes $ encode hash
 
 fromHexString::Hex.HexString -> Either String Multihash
 fromHexString hex = decode $ Hex.toBytes hex
+
+
+sum::BS.ByteString -> MultihashType -> Int -> BS.ByteString
+sum bs typ len = BS.empty
+--sum bs MD5 len = BS.pack $  $ CH.hash bs ::CH.Digest MD5

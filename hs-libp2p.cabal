@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 233193df36cb69c41489dd1d7557b67201a87c825ed583c0a5b13d3e68d0a2d3
+-- hash: 35dea691739536c7b992601d105e79fbd9d198311f8c6618d5fcd760c83d1909
 
 name:           hs-libp2p
 version:        0.1.0.0
@@ -32,18 +32,23 @@ library
       Libp2p.Core.Crypto.PB.PrivateKey
       Libp2p.Core.Crypto.PB.PublicKey
       Libp2p.Core.Crypto.RSA
+      Libp2p.Core.Peer.Internal
   other-modules:
       Paths_hs_libp2p
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , base58-bytestring
     , binary
     , bytes
     , bytestring
+    , cereal
     , containers
     , cryptonite
     , cryptostore
+    , hexstring
+    , hs-multihash
     , pem
     , protocol-buffers
     , protocol-buffers-descriptor
@@ -62,4 +67,5 @@ test-suite hs-libp2p-test
       base >=4.7 && <5
     , bytestring
     , hs-libp2p
+    , hs-multihash
   default-language: Haskell2010
