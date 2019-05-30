@@ -19,6 +19,6 @@ ownObservedAddrTTL = 10 * 60 * 1000
 
 class AddrBook a where
   addAddr :: a -> ID -> MA.Multiaddr   -> Int ->  m a
-  addAddrs:: a -> ID -> [MA.Multiaddr]  -> Int -> m  a
+  addAddrs:: a -> ID -> [MA.Multiaddr]  -> Int -> m da
   addrs:: a -> ID -> [MA.Multiaddr]
      
