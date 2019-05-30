@@ -5,6 +5,7 @@ extra-deps:
  - cryptostore-0.2.0.0
  - x509-1.7.5
  - hs-multihash
+ - hs-multiaddr
 
 packages:
  - .

@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 35dea691739536c7b992601d105e79fbd9d198311f8c6618d5fcd760c83d1909
+-- hash: 0e85ce373b59d94991fa086aab0276f2e81b8d4fe2ae1725bf22706ad7ac5515
 
 name:           hs-libp2p
 version:        0.1.0.0
@@ -26,13 +26,14 @@ source-repository head
 library
   exposed-modules:
       Libp2p.Core.Crypto
-      Libp2p.Core.Crypto.Key
       Libp2p.Core.Crypto.PB
       Libp2p.Core.Crypto.PB.KeyType
       Libp2p.Core.Crypto.PB.PrivateKey
       Libp2p.Core.Crypto.PB.PublicKey
       Libp2p.Core.Crypto.RSA
-      Libp2p.Core.Peer.Internal
+      Libp2p.Core.Peer.AddrInfo
+      Libp2p.Core.Peer.Peer
+      Libp2p.Core.PeerStore
   other-modules:
       Paths_hs_libp2p
   hs-source-dirs:
@@ -48,6 +49,7 @@ library
     , cryptonite
     , cryptostore
     , hexstring
+    , hs-multiaddr
     , hs-multihash
     , pem
     , protocol-buffers

@@ -3,10 +3,15 @@
 {-# LANGUAGE TypeFamilies #-}
 module Libp2p.Core.Crypto.RSA (
   generateRSAKeyPair,
-  RSAPrivateKey,
-  RSAPublicKey
+  pubBytes,
+  pubTyp,
+  pubRaw,
+  verify,
+  privateBytes,
+  privateRaw,
+  privateTyp,
+  sign
 ) where
-import Libp2p.Core.Crypto.Key
 import qualified Crypto.PubKey.RSA as R
 import Crypto.Random.Types
 import qualified Data.ByteString as BS
@@ -23,30 +28,30 @@ import qualified Libp2p.Core.Crypto.PB.PrivateKey as PB
 import qualified Libp2p.Core.Crypto.PB.KeyType as PB
 import Text.ProtocolBuffers(messageGet,messagePut,Utf8(..),defaultValue)
 
-
-generateRSAKeyPair::(MonadRandom m) => Int  -> m (RSAPublicKey,RSAPrivateKey)
+generateRSAKeyPair::(MonadRandom m) => Int  -> m (R.PublicKey,R.PrivateKey)
 generateRSAKeyPair bits = R.generate bits 0x10001
 
-type RSAPublicKey  = R.PublicKey
+pubBytes::R.PublicKey -> BS.ByteString
+pubBytes k = LBS.toStrict $ messagePut $ PB.PublicKey (toEnum $ pubTyp k) (LBS.fromStrict $ PM.pemWriteBS $ XS.pubKeyToPEM $ X.PubKeyRSA k)
 
-instance Key RSAPublicKey where
-  bytes k = LBS.toStrict $ messagePut $ PB.PublicKey (toEnum $ typ k)
-                                                     (LBS.fromStrict $ PM.pemWriteBS $ XS.pubKeyToPEM $ X.PubKeyRSA k)
-  raw   k = PM.pemWriteBS $ XS.pubKeyToPEM $ X.PubKeyRSA k
-  typ   k = fromEnum PB.RSA
+pubTyp::R.PublicKey -> Int
+pubTyp   k = fromEnum PB.RSA
 
-instance PubKey RSAPublicKey where
-  verify = P15.verify (Just R.SHA256)
+pubRaw::R.PublicKey -> BS.ByteString
+pubRaw k = PM.pemWriteBS $ XS.pubKeyToPEM $ X.PubKeyRSA k
 
-type RSAPrivateKey = R.PrivateKey
+verify::R.PublicKey -> BS.ByteString -> BS.ByteString -> Bool
+verify = P15.verify (Just R.SHA256)
 
-instance Key RSAPrivateKey where
-  bytes k = LBS.toStrict $ messagePut $ PB.PrivateKey (toEnum $ typ k)
-                                                      (LBS.fromStrict $ PM.pemWriteBS $ P8.keyToPEM P8.TraditionalFormat $ X.PrivKeyRSA k)
-  raw   k = PM.pemWriteBS $ P8.keyToPEM P8.TraditionalFormat $ X.PrivKeyRSA k
-  typ   k = fromEnum PB.RSA
+privateBytes::R.PrivateKey -> BS.ByteString
+privateBytes k = LBS.toStrict $ messagePut $ PB.PrivateKey (toEnum $ privateTyp k)
+                                                           (LBS.fromStrict $ PM.pemWriteBS $ P8.keyToPEM P8.TraditionalFormat $ X.PrivKeyRSA k)
 
-instance PrivateKey RSAPrivateKey where
-  type     GPubKeyType RSAPrivateKey =  RSAPublicKey
-  pubKey  k =  R.private_pub k::RSAPublicKey
-  sign     =  P15.sign Nothing (Just R.SHA256)
+privateRaw::R.PrivateKey -> BS.ByteString
+privateRaw k = PM.pemWriteBS $ P8.keyToPEM P8.TraditionalFormat $ X.PrivKeyRSA k 
+
+privateTyp::R.PrivateKey -> Int
+privateTyp k = fromEnum PB.RSA
+
+sign::R.PrivateKey -> BS.ByteString -> Either R.Error BS.ByteString
+sign = P15.sign Nothing (Just R.SHA256)

@@ -2,14 +2,17 @@
 {-# language ScopedTypeVariables #-}
 {-# language FlexibleInstances #-}
 {-# language RecordWildCards#-}
+{-# language DataKinds #-}
 module Libp2p.Multihash (
+ MultihashType(..),
  Multihash(..),
  fromBS58String,
  toByteString,
  toBS58String,
  toHexString,
  fromHexString,
- fromByteString
+ fromByteString,
+ sumHash
 ) where
 import Data.Maybe
 import Text.Read
@@ -26,14 +29,16 @@ import Data.ByteString.Base58 as BS58
 import Data.Serialize as DS
 import Data.HexString as Hex
 import qualified Crypto.Hash as CH
+import qualified Data.ByteArray as BA
+import Data.Word
 
 data MultihashType = ID | SHA1  | SHA2_256 | SHA2_512 | SHA3_224 | SHA3_256 | SHA3_384 | SHA3_512 | SHA3 | KECCAK_224 | KECCAK_256 |
-                     KECCAK_384 | KECCAK_512 | SHAKE_128 | SHAKE_256 | BLAKE2B_MIN | BLAKE2B_MAX | BLAKE2S_MIN | BLAKE2S_MAX | MD5 | DBL_SHA2_256 | MURMUR3 | X11
+                     KECCAK_384 | KECCAK_512 | SHAKE_128 | SHAKE_256 | BLAKE2B_MIN | BLAKE2B_MAX | BLAKE2S_MIN | BLAKE2S_MAX | MD5
                      deriving (Eq)
 
 mCodeTable = [(ID, 0x00),(SHA1, 0x11),(SHA2_256, 0x12),(SHA2_512, 0x13),(SHA3_224, 0x17),(SHA3_256, 0x16),(SHA3_384, 0x15),(SHA3_512, 0x14),
               (SHA3,  0x14),(KECCAK_224, 0x1A),(KECCAK_256, 0x1B),(KECCAK_384, 0x1C),(KECCAK_512, 0x1D),(SHAKE_128,0x18) ,(SHAKE_256, 0x19),(BLAKE2B_MIN, 0xb201),
-              (BLAKE2B_MAX, 0xb240),(BLAKE2S_MIN, 0xb241),(BLAKE2S_MAX, 0xb260),(MD5, 0xd5),(DBL_SHA2_256, 0x56),(MURMUR3, 0x22),(X11, 0x1100)]
+              (BLAKE2B_MAX, 0xb240),(BLAKE2S_MIN, 0xb241),(BLAKE2S_MAX, 0xb260),(MD5, 0xd5)]
 
 hashTypeCode::MultihashType -> Maybe Int
 hashTypeCode typ = lookup typ mCodeTable
@@ -62,9 +67,7 @@ instance Show MultihashType where
    show  BLAKE2S_MIN  = "blake2s-min"
    show  BLAKE2S_MAX  = "blake2b-max"
    show  MD5          = "md5"
-   show  DBL_SHA2_256 = "dbl-sha2-256"
-   show  MURMUR3      = "murmur3"
-   show  X11          = "x11"
+ 
 
 instance Read MultihashType where
   readsPrec _ "id"           = [(ID,"")]
@@ -86,9 +89,6 @@ instance Read MultihashType where
   readsPrec _ "blake2s-min"  = [(BLAKE2S_MIN,"")]
   readsPrec _ "blake2s-max"  = [(BLAKE2S_MAX,"")]
   readsPrec _ "md5"          = [(MD5,"")]
-  readsPrec _ "dbl-sha2-256" = [(DBL_SHA2_256,"")]
-  readsPrec _ "murmur3"      = [(MURMUR3,"")]
-  readsPrec _ "x11"          = [(X11,"")]
   readsPrec _ _              = []
 
 defaultLength::MultihashType -> Int
@@ -99,15 +99,12 @@ defaultLength SHA3_224     = 28
 defaultLength SHA3_256     = 32
 defaultLength SHA3_384     = 48
 defaultLength SHA3_512     = 64
-defaultLength DBL_SHA2_256 = 32
 defaultLength KECCAK_224   = 28
 defaultLength KECCAK_256   = 32
-defaultLength MURMUR3      = 4
 defaultLength KECCAK_384   = 48
 defaultLength KECCAK_512   = 64
 defaultLength SHAKE_128    = 32
 defaultLength SHAKE_256    = 64
-defaultLength X11          = 64
 defaultLength MD5          = 16
 defaultLength  _           = -1
 
@@ -159,6 +156,28 @@ fromHexString::Hex.HexString -> Either String Multihash
 fromHexString hex = decode $ Hex.toBytes hex
 
 
-sum::BS.ByteString -> MultihashType -> Int -> BS.ByteString
-sum bs typ len = BS.empty
---sum bs MD5 len = BS.pack $  $ CH.hash bs ::CH.Digest MD5
+sumHash::BS.ByteString -> MultihashType -> Int -> BS.ByteString
+sumHash bs typ len = let sliceLen = if len < 0 then defaultLength typ else len  
+                     in  BA.pack $ Prelude.take len $ BA.unpack (CH.hash bs ::CH.Digest CH.MD5)
+
+sumHash'::BS.ByteString -> MultihashType -> [Word8]
+sumHash' bs ID          = BS.unpack bs
+sumHash' bs SHA1        = BA.unpack (CH.hash bs ::CH.Digest CH.SHA1)
+sumHash' bs SHA2_256    = BA.unpack (CH.hash bs ::CH.Digest CH.SHA256)
+sumHash' bs SHA2_512    = BA.unpack (CH.hash bs ::CH.Digest CH.SHA512)
+sumHash' bs SHA3_224    = BA.unpack (CH.hash bs ::CH.Digest CH.SHA3_224)
+sumHash' bs SHA3_256    = BA.unpack (CH.hash bs ::CH.Digest CH.SHA3_256)
+sumHash' bs SHA3_384    = BA.unpack (CH.hash bs ::CH.Digest CH.SHA3_384)
+sumHash' bs SHA3_512    = BA.unpack (CH.hash bs ::CH.Digest CH.SHA3_512)
+sumHash' bs SHA3        = BA.unpack (CH.hash bs ::CH.Digest CH.SHA384)
+sumHash' bs KECCAK_224  = BA.unpack (CH.hash bs ::CH.Digest CH.Keccak_224)
+sumHash' bs KECCAK_256  = BA.unpack (CH.hash bs ::CH.Digest CH.Keccak_256)
+sumHash' bs KECCAK_384  = BA.unpack (CH.hash bs ::CH.Digest CH.Keccak_384)
+sumHash' bs KECCAK_512  = BA.unpack (CH.hash bs ::CH.Digest CH.Keccak_512)
+sumHash' bs SHAKE_128   = BA.unpack (CH.hash bs ::CH.Digest (CH.SHAKE128 128))
+sumHash' bs SHAKE_256   = BA.unpack (CH.hash bs ::CH.Digest (CH.SHAKE256 256))
+sumHash' bs BLAKE2B_MIN = BA.unpack (CH.hash bs ::CH.Digest CH.Blake2b_160)
+sumHash' bs BLAKE2B_MAX = BA.unpack (CH.hash bs ::CH.Digest CH.Blake2b_512)
+sumHash' bs BLAKE2S_MIN = BA.unpack (CH.hash bs ::CH.Digest CH.Blake2s_160)
+sumHash' bs BLAKE2S_MAX = BA.unpack (CH.hash bs ::CH.Digest CH.Blake2s_256)
+sumHash' bs MD5         = BA.unpack (CH.hash bs ::CH.Digest CH.MD5)

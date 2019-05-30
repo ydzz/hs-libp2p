@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b2c8dc6d86f26265f24f9a7884d02e176a221c8f1737f1e185f4f82d8e6ce03b
+-- hash: 9312f7e71fd4d22ddb1558ff92a8c5472c259cd9decee55d70423689f63bea7e
 
 name:           hs-multihash
 version:        0.0.0
@@ -24,6 +24,7 @@ library
     , cereal
     , cryptonite
     , hexstring
+    , memory
     , text
   default-language: Haskell2010
 
@@ -45,5 +46,6 @@ test-suite hs-libp2p-test
     , hexstring
     , hs-multihash
     , hspec
+    , memory
     , text
   default-language: Haskell2010

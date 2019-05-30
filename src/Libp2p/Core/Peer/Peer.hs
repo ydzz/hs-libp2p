@@ -1,7 +1,8 @@
 {-# Language OverloadedStrings #-}
 {-# Language ScopedTypeVariables#-}
 {-# Language InstanceSigs#-}
-module Libp2p.Core.Peer.Internal
+{-# Language AllowAmbiguousTypes#-}
+module Libp2p.Core.Peer.Peer
   ( pretty
   , ID(..)
   , fromBS58String
@@ -12,11 +13,12 @@ where
 import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Char8         as C8
 import           Data.ByteString.Base58        as BS58
-import qualified Libp2p.Multihash as MH
-import qualified Libp2p.Core.Crypto.Key as K
+import qualified Libp2p.Core.Crypto as CY
+import  Libp2p.Core.Crypto.RSA
 import Data.Either
 import Data.Serialize as DS
 import Data.HexString as Hex
+import qualified Libp2p.Multihash as MH
 
 newtype ID = ID BS.ByteString
 
@@ -42,9 +44,18 @@ toHexString (ID pid) = Hex.fromBytes pid
 fromHexString::Hex.HexString -> Either String ID
 fromHexString hexString = ID . MH.toByteString <$> MH.fromHexString hexString
 
-fromPublicKey::(K.PubKey a) => a -> ID
-fromPublicKey k = undefined
+advancedEnableInlining = True
+maxInlineKeyLength     = 42
 
-data AddrInfo = AddrInfo { peerId::ID
-                         , addrs ::[MH.Multihash]
-                         }
+fromPublicKey::CY.PubKey -> ID
+fromPublicKey k = if advancedEnableInlining && BS.length kBytes < maxInlineKeyLength
+                  then ID kBytes
+                  else ID sumHash
+  where
+    kBytes = CY.pubBytes k
+    sumHash = MH.sumHash kBytes MH.SHA2_256 (-1)
+
+
+fromPrivateKey::CY.PrivateKey  -> ID
+fromPrivateKey k = fromPublicKey (CY.pubKey k) 
+

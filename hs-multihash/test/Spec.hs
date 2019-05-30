@@ -7,8 +7,14 @@ import qualified Crypto.Hash as Hash
 import qualified Data.ByteString as BS
 import Test.Hspec
 import Data.HexString as Hex
+import qualified Data.ByteArray as BA
+import qualified Crypto.Hash as CH
 main::IO ()
-main = hspec $
+main =do
+ print "start test"
+ print (M.sumHash "123456" M.MD5 2)
+ print $ M.ttt "123456"
+ hspec $
   describe "test multihash" $ do
     it "test base58 = base58" $
       Right "QmPZ3ZfLNSiiQXj75Ft5Qs2qnPCt1Csp1nZBUppfY997Yb" `shouldBe` testBase58Hash "QmPZ3ZfLNSiiQXj75Ft5Qs2qnPCt1Csp1nZBUppfY997Yb"
@@ -23,6 +29,8 @@ main = hspec $
       M.fromBS58String "QmPZ3ZfLNSiiQXj75Ft5Qs2qnPCt1Csp1nZBUppfY997Yb"
     it "read = show" $ let hash::M.Multihash = read "QmPZ3ZfLNSiiQXj75Ft5Qs2qnPCt1Csp1nZBUppfY997Yb"
                        in  show hash `shouldBe` "QmPZ3ZfLNSiiQXj75Ft5Qs2qnPCt1Csp1nZBUppfY997Yb"
+    it "sum hash" $
+      Hex.hexString "e10adc3949ba59abbe56e057f20f883e" `shouldBe`  Hex.fromBytes (M.sumHash "123456" M.MD5 1)
 
 
 testBase58Hash::BS.ByteString -> Either String BS.ByteString

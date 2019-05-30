@@ -33,6 +33,7 @@ library:
    - protocol-buffers-descriptor
    - base58-bytestring
    - hs-multihash
+   - hs-multiaddr
    - hexstring
 
 tests:

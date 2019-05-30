@@ -9,6 +9,7 @@ dependencies:
  - base58-bytestring
  - hexstring
  - cryptonite
+ - memory
 
 library:
  source-dirs: src
