@@ -158,7 +158,7 @@ fromHexString hex = decode $ Hex.toBytes hex
 
 sumHash::BS.ByteString -> MultihashType -> Int -> BS.ByteString
 sumHash bs typ len = let sliceLen = if len < 0 then defaultLength typ else len  
-                     in  BA.pack $ Prelude.take len $ BA.unpack (CH.hash bs ::CH.Digest CH.MD5)
+                     in  BA.pack $ Prelude.take len $ sumHash' bs typ
 
 sumHash'::BS.ByteString -> MultihashType -> [Word8]
 sumHash' bs ID          = BS.unpack bs

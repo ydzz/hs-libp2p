@@ -1,12 +1,17 @@
 {-# Language OverloadedStrings #-}
 {-# Language ScopedTypeVariables#-}
+{-# LANGUAGE TypeSynonymInstances#-}
+{-# LANGUAGE FlexibleInstances#-}
+{-# LANGUAGE MultiParamTypeClasses#-}
+{-# LANGUAGE FunctionalDependencies#-}
+
 import Libp2p.Core.Crypto.RSA
-import qualified Libp2p.Core.Crypto.Key as K
+import qualified Libp2p.Core.Crypto as K
 import Numeric (showHex)
 import qualified Data.ByteString as B
 import qualified System.IO as I
 import Data.Either
-import Libp2p.Core.Peer.Internal
+import Libp2p.Core.Peer.Peer
 import Text.Read
 import qualified Libp2p.Multihash as MH
 main :: IO ()
@@ -17,16 +22,12 @@ main = do
 testCrypto::IO ()
 testCrypto = do
  (pub,prv) <- generateRSAKeyPair 64
- print $ K.bytes pub
- print $ K.raw pub
- print $ K.typ pub
- print $ K.bytes prv
  putStrLn "==================="
  let signData::B.ByteString = "12345691011121314151617181920"
- let   signRet = K.sign prv signData
+ let   signRet = K.sign (K.RSAPrivateKey prv) signData
  print signRet
  let signToken::B.ByteString = fromRight "" signRet 
- print $ K.verify pub signData signToken
+ print $ K.verify (K.RSAPubKey pub) signData signToken
  --B.writeFile "fff.txt" $  raw pub
  --B.writeFile "ppp.txt" privareBS
 
@@ -41,6 +42,9 @@ testPeer = do
   let hexString =  toHexString (fromRight undefined pid2)
   print $ fromHexString hexString
 
+
+class (Num a,Num b,Num c) => GPlus a b c | a b -> c where
+  plus::a -> b -> c
 {-
 
 pN::Integer

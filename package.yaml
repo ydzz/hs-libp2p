@@ -35,6 +35,12 @@ library:
    - hs-multihash
    - hs-multiaddr
    - hexstring
+   - io-streams
+   - network
+   - data-default
+   - transformers
+   - errors
+   - extra
 
 tests:
   hs-libp2p-test:

@@ -58,4 +58,3 @@ fromPublicKey k = if advancedEnableInlining && BS.length kBytes < maxInlineKeyLe
 
 fromPrivateKey::CY.PrivateKey  -> ID
 fromPrivateKey k = fromPublicKey (CY.pubKey k) 
-

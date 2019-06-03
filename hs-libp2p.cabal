@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0e85ce373b59d94991fa086aab0276f2e81b8d4fe2ae1725bf22706ad7ac5515
+-- hash: 11a6ad5ef6008074d2f6e6511c96124a15420f15b5b93437cca4df7f2079f530
 
 name:           hs-libp2p
 version:        0.1.0.0
@@ -25,15 +25,26 @@ source-repository head
 
 library
   exposed-modules:
+      Libp2p
+      Libp2p.Config.Config
       Libp2p.Core.Crypto
       Libp2p.Core.Crypto.PB
       Libp2p.Core.Crypto.PB.KeyType
       Libp2p.Core.Crypto.PB.PrivateKey
       Libp2p.Core.Crypto.PB.PublicKey
       Libp2p.Core.Crypto.RSA
+      Libp2p.Core.Mux
+      Libp2p.Core.Network.Internal
+      Libp2p.Core.Network.Network
       Libp2p.Core.Peer.AddrInfo
       Libp2p.Core.Peer.Peer
       Libp2p.Core.PeerStore
+      Libp2p.Core.Protocol.Switch
+      Yamux.Addr
+      Yamux.Config
+      Yamux.Const
+      Yamux.Mux
+      Yamux.Session
   other-modules:
       Paths_hs_libp2p
   hs-source-dirs:
@@ -48,12 +59,18 @@ library
     , containers
     , cryptonite
     , cryptostore
+    , data-default
+    , errors
+    , extra
     , hexstring
     , hs-multiaddr
     , hs-multihash
+    , io-streams
+    , network
     , pem
     , protocol-buffers
     , protocol-buffers-descriptor
+    , transformers
     , x509
   default-language: Haskell2010
 
