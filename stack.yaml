@@ -6,6 +6,8 @@ extra-deps:
  - x509-1.7.5
  - hs-multihash
  - hs-multiaddr
+ - network-3.0.1.1
+ - io-streams-1.5.1.0
 
 packages:
  - .

@@ -8,7 +8,7 @@ import Control.Monad.Trans.Except
 import Control.Error.Safe
 import Data.Either
 import Control.Monad.Extra
-import qualified System.IO.Streams as S
+import System.Log.FastLogger
 
 data Config = Config {
   acceptBacklog::Int,
@@ -16,7 +16,7 @@ data Config = Config {
   keepAliveInterval::Int,
   connectionWriteTimeout::Int,
   maxStreamWindowSize::Int,
-  logOutput::Maybe (S.OutputStream String),
+  logOutput::LogType,
   readBufSize::Int,
   writeCoalesceDelay::Int,
   maxMessageSize::Int
@@ -32,7 +32,7 @@ instance Default Config where
         readBufSize            = 4096,
         maxMessageSize         = 64 * 1024,
         writeCoalesceDelay     = 100,
-        logOutput = Nothing
+        logOutput = LogStderr 1024
     }
 
 verifyConfig::Config -> Either String Config

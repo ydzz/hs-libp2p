@@ -41,6 +41,8 @@ library:
    - transformers
    - errors
    - extra
+   - fast-logger
+   - prelude-safeenum
 
 tests:
   hs-libp2p-test:
@@ -54,6 +56,10 @@ tests:
     - bytestring
     - hs-libp2p
     - hs-multihash
+    - fast-logger
+    - data-default
+    - extra
+    - network
 
 
 

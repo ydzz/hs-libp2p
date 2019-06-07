@@ -8,7 +8,7 @@ module Libp2p.Multiaddr (
 import Control.Applicative (many, some, (<|>))
 import Control.Monad (unless, void)
 import qualified Data.IP                       as IP
-import qualified Network                       as Net
+import qualified Network.Socket                as Net
 import qualified Data.ByteString               as BS
 import qualified Libp2p.Multihash              as MH
 import           Text.ParserCombinators.ReadP (ReadP, char, readP_to_S,readS_to_P, string)

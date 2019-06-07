@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 11a6ad5ef6008074d2f6e6511c96124a15420f15b5b93437cca4df7f2079f530
+-- hash: f02d7aeb2ac00578f4cd6b060cc9b4cb715e80318532bc9425f3a3e53bcbd192
 
 name:           hs-libp2p
 version:        0.1.0.0
@@ -62,12 +62,14 @@ library
     , data-default
     , errors
     , extra
+    , fast-logger
     , hexstring
     , hs-multiaddr
     , hs-multihash
     , io-streams
     , network
     , pem
+    , prelude-safeenum
     , protocol-buffers
     , protocol-buffers-descriptor
     , transformers
@@ -85,6 +87,10 @@ test-suite hs-libp2p-test
   build-depends:
       base >=4.7 && <5
     , bytestring
+    , data-default
+    , extra
+    , fast-logger
     , hs-libp2p
     , hs-multihash
+    , network
   default-language: Haskell2010

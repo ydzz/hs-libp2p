@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeSynonymInstances#-}
 {-# LANGUAGE FlexibleInstances#-}
 {-# LANGUAGE MultiParamTypeClasses#-}
-{-# LANGUAGE FunctionalDependencies#-}
+
 
 import Libp2p.Core.Crypto.RSA
 import qualified Libp2p.Core.Crypto as K
@@ -13,11 +13,19 @@ import qualified System.IO as I
 import Data.Either
 import Libp2p.Core.Peer.Peer
 import Text.Read
+import Data.Default
+import System.Log.FastLogger
 import qualified Libp2p.Multihash as MH
+import Yamux.Session as YS
+import Yamux.Config as YC
+import Control.Monad
+import System.Time.Extra
+import Network.Socket
+import qualified Control.Exception as E
 main :: IO ()
 main = do
  putStrLn "\r\n========================"
- testPeer
+ testSession
 
 testCrypto::IO ()
 testCrypto = do
@@ -26,7 +34,7 @@ testCrypto = do
  let signData::B.ByteString = "12345691011121314151617181920"
  let   signRet = K.sign (K.RSAPrivateKey prv) signData
  print signRet
- let signToken::B.ByteString = fromRight "" signRet 
+ let signToken::B.ByteString = fromRight "" signRet
  print $ K.verify (K.RSAPubKey pub) signData signToken
  --B.writeFile "fff.txt" $  raw pub
  --B.writeFile "ppp.txt" privareBS
@@ -35,7 +43,7 @@ testCrypto = do
 testPeer::IO ()
 testPeer = do
   let pid = ID "000000000000000000000000000000000000000000"
-  print $ pretty　pid
+  print $ pretty pid
   print pid
   let pid2::Either String ID = fromBS58String "QmX9c6GNBsoFBwQLSBNKhygi32iLzg4oWHXwxGDRBDo6qn"
   print pid2
@@ -43,8 +51,47 @@ testPeer = do
   print $ fromHexString hexString
 
 
-class (Num a,Num b,Num c) => GPlus a b c | a b -> c where
-  plus::a -> b -> c
+testLogger::IO ()
+testLogger = do
+ logdst <- newFileLoggerSet 1024 "/home/yangdao/Project/a.txt"
+ pushLogStrLn logdst "123456"
+ pushLogStrLn logdst "1234566"
+ pushLogStrLn logdst "12345654"
+ pushLogStrLn logdst "1234563"
+ return ()
+
+testSession::IO ()
+testSession = do
+   addr <- resolve "3001"
+   sock <- open addr
+   loop sock
+   sleep 3
+   putStrLn "End Test Session"
+ where 
+  resolve port = do
+    let hints = defaultHints {
+            addrFlags = [AI_PASSIVE]
+          , addrSocketType = Stream
+          }
+    addr:_ <- getAddrInfo (Just hints) Nothing (Just port)
+    return addr
+  open addr = do
+    sock <- socket (addrFamily addr) (addrSocketType addr) (addrProtocol addr)
+    setSocketOption sock ReuseAddr 1
+    fd <- fdSocket sock
+    setCloseOnExecIfNeeded fd
+    bind sock (addrAddress addr)
+    listen sock 5
+    putStrLn $ "open " <> (show $ addrAddress addr)
+    return sock
+  loop sock = forever $ do
+        putStrLn "start loop"
+        (conn, peer) <- accept sock
+        putStrLn $ "Connection from " ++ show peer
+        sess <- YS.newSession def conn False 0
+        return ()
+        
+        
 {-
 
 pN::Integer
