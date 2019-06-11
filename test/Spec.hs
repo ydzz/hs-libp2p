@@ -67,7 +67,7 @@ testSession = do
    loop sock
    sleep 3
    putStrLn "End Test Session"
- where 
+ where
   resolve port = do
     let hints = defaultHints {
             addrFlags = [AI_PASSIVE]
@@ -82,7 +82,7 @@ testSession = do
     setCloseOnExecIfNeeded fd
     bind sock (addrAddress addr)
     listen sock 5
-    putStrLn $ "open " <> (show $ addrAddress addr)
+    putStrLn $ "open " <> show (addrAddress addr)
     return sock
   loop sock = forever $ do
         putStrLn "start loop"
@@ -90,8 +90,8 @@ testSession = do
         putStrLn $ "Connection from " ++ show peer
         sess <- YS.newSession def conn False 0
         return ()
-        
-        
+
+
 {-
 
 pN::Integer

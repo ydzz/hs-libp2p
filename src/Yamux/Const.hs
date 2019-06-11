@@ -5,7 +5,11 @@ module Yamux.Const (
     Header(..),
     headerSize,
     protoVersion,
-    MsgType(..)
+    MsgType(..),
+    flagSYN,
+    flagACK,
+    flagFIN,
+    flagRST
 ) where
 import qualified Data.ByteString as BS
 import Data.Serialize

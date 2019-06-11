@@ -43,6 +43,7 @@ library:
    - extra
    - fast-logger
    - prelude-safeenum
+   - stm
 
 tests:
   hs-libp2p-test:
