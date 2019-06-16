@@ -9,7 +9,10 @@ module Yamux.Const (
     flagSYN,
     flagACK,
     flagFIN,
-    flagRST
+    flagRST,
+    goAwayNormal,
+    goAwayProtoErr,
+    goAwayInternalErr
 ) where
 import qualified Data.ByteString as BS
 import Data.Serialize
@@ -32,6 +35,10 @@ sizeOfType = 1::Int
 sizeOfFlags = 2::Int
 sizeOfStreamID = 4::Int
 sizeOfLength = 4::Int
+
+goAwayNormal = 0::Int
+goAwayProtoErr = 1::Int
+goAwayInternalErr = 2::Int
 
 headerSize::Int
 headerSize = sizeOfVersion + sizeOfType + sizeOfFlags + sizeOfStreamID + sizeOfLength

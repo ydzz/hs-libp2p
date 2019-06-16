@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7cc9d6bc5f6eb61043e0046c3f0c8e7383fc7c522e0324f0b06771514fd18d0f
+-- hash: a2bc2a147aa7f1c673c7d5c545162aa369012d73b54aa02a7e8cdd64349fe088
 
 name:           hs-libp2p
 version:        0.1.0.0
@@ -46,6 +46,7 @@ library
       Yamux.Mux
       Yamux.Session
       Yamux.Stream
+      Yamux.Types
   other-modules:
       Paths_hs_libp2p
   hs-source-dirs:
@@ -67,7 +68,6 @@ library
     , hexstring
     , hs-multiaddr
     , hs-multihash
-    , if
     , io-streams
     , network
     , pem
