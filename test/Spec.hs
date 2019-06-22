@@ -3,8 +3,6 @@
 {-# LANGUAGE TypeSynonymInstances#-}
 {-# LANGUAGE FlexibleInstances#-}
 {-# LANGUAGE MultiParamTypeClasses#-}
-
-
 import Libp2p.Core.Crypto.RSA
 import qualified Libp2p.Core.Crypto as K
 import Numeric (showHex)
@@ -22,10 +20,32 @@ import Control.Monad
 import System.Time.Extra
 import Network.Socket
 import qualified Control.Exception as E
+import Control.Concurrent.Async
+import Control.Concurrent
+import Yamux.Deadline
+import Data.Time
+
 main :: IO ()
 main = do
  putStrLn "\r\n========================"
- testSession
+ testDeadline
+
+testDeadline::IO ()
+testDeadline = do
+  putStrLn "start"
+  line <- mkPipeDeadline
+  now <- getCurrentTime
+  let newTime  = addUTCTime (fromRational 5) now
+  let newTime2 = addUTCTime (fromRational 3) now
+  print newTime
+  print newTime2
+  setDeadline line newTime
+  setDeadline line newTime2
+  waitDeadline line
+  now <- getCurrentTime
+  print now
+  putStrLn "end"
+
 
 testCrypto::IO ()
 testCrypto = do

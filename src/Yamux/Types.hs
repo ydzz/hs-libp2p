@@ -5,6 +5,7 @@ module Yamux.Types (
 ) where
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TMVar
+import Control.Concurrent.STM.TBQueue
 import Yamux.Config
 import System.Log.FastLogger
 import Network.Socket
@@ -33,5 +34,7 @@ data Stream = Stream {
     streamId::Int,
     session::Session,
     state::StreamState,
-    recvBuf::BS.ByteString
+    recvBuf::BS.ByteString,
+    recvNotifyCh::TBQueue Bool,
+    sendNotifyCh::TBQueue Bool
 }

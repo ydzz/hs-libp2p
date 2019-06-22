@@ -44,6 +44,8 @@ library:
    - fast-logger
    - prelude-safeenum
    - stm
+   - time
+   - async
 
 tests:
   hs-libp2p-test:
@@ -61,6 +63,8 @@ tests:
     - data-default
     - extra
     - network
+    - async
+    - time
 
 
 
